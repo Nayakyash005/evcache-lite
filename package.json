@@ -2,14 +2,13 @@
   "name": "distributed_cache_project",
   "version": "1.0.0",
   "description": "��#\u0000 \u0000e\u0000v\u0000c\u0000a\u0000c\u0000h\u0000e\u0000-\u0000l\u0000i\u0000t\u0000e\u0000\r\u0000 \u0000",
-  "main": "index.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js",
     "build": "tsc"
-
   },
   "repository": {
     "type": "git",

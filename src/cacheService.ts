@@ -20,6 +20,9 @@ export class CacheService<T = unknown> {
     }
     return entry.value as T;
   }
+  has(key: string): boolean {
+    return this.store.has(key);
+  }
 
   delete(key: string): boolean {
     return this.store.delete(key);
@@ -29,6 +32,3 @@ export class CacheService<T = unknown> {
     this.store.clear();
   }
 }
-
-const cache = new CacheService();
-export default cache;
