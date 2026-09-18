@@ -5,8 +5,8 @@ export type CacheNode = {
 };
 
 export type RingPoint = {
-  hash: number; // the hash value (the starting point of the node as well)
-  node: CacheNode; // the node that this points belongs to
+  hash: number;
+  node: CacheNode;
 };
 
 export function hashKey(key: string): number {
@@ -21,11 +21,8 @@ export function hashKey(key: string): number {
 export class ConsistentHashRing {
   private ring: RingPoint[] = [];
   private virtualNodes: number = 100;
-  addNode(node: CacheNode): void {
-    // const hash = hashKey(node.id);
-    // this.ring.push({ hash, node });
 
-    // rather then allocating a continous block to ndoe, we will allocate multiple virtual nodes to the node, this will help in better distribution of keys across nodes
+  addNode(node: CacheNode): void {
     for (let i = 0; i < this.virtualNodes; i++) {
       const virtualNodeId = `${node.id}-${i}`;
       const virtualHash = hashKey(virtualNodeId);
@@ -37,14 +34,27 @@ export class ConsistentHashRing {
 
   getNode(key: string): CacheNode | undefined {
     if (this.ring.length === 0) return undefined;
-    let hash = hashKey(key);
-    for (let i = 0; i < this.ring.length; i++) {
-      if (hash <= this.ring[i]!.hash) {
-        return this.ring[i]!.node;
+
+    const hash = hashKey(key);
+
+    for (const point of this.ring) {
+      if (hash <= point.hash) {
+        return point.node;
       }
     }
 
-    //if we wrap aroud the circle when the hash is greater than all nodes
     return this.ring[0]?.node;
+  }
+}
+
+export class NodeHealthManager {
+  private health = new Map<string, boolean>();
+
+  setNodehealth(nodeId: string, isHealthy: boolean): void {
+    this.health.set(nodeId, isHealthy);
+  }
+
+  getNodeHealth(nodeId: string): boolean | undefined {
+    return this.health.get(nodeId);
   }
 }
